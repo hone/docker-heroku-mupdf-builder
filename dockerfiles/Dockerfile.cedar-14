@@ -1,0 +1,21 @@
+FROM heroku/cedar:14
+MAINTAINER hone
+
+# glfw3 PPA
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:keithw/glfw3
+# need these deps to build mupdf
+RUN apt-get update && apt-get install -y \
+  libglfw3-dev \
+  libgl1-mesa-dev \
+  mesa-common-dev \
+  pkg-config \
+  xorg-dev
+
+# setup workspace
+RUN rm -rf /tmp/workspace
+RUN mkdir -p /tmp/workspace
+
+# output dir is mounted
+
+ADD build.sh /tmp/build.sh
+CMD ["sh", "/tmp/build.sh", "/tmp/workspace", "/tmp/output"]
